@@ -1,0 +1,4 @@
+window.ENV = {
+  GEMINI_API_KEY: "AIzaSyAV5ih5f5yI6gTDUgBdUgoTeBlX7SIfobQ",
+  BSD_API_TOKEN: "Token 5d384b9d89673cdcbb1d03bee645f612b17a5365"
+};

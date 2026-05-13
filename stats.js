@@ -1,5 +1,6 @@
 (function() {
   const API_TOKEN = window.ENV?.BSD_API_TOKEN || "";
+  const BASE_URL = 'https://sports.bzzoiro.com';
   const GEMINI_API_KEY = window.ENV?.GEMINI_API_KEY || "";
 
   // Elements
