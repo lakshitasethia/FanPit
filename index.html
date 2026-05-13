@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FanPit — The Ultimate Football Fan Companion</title>
+  <meta name="description" content="FanPit: An immersive football fan companion experience. Live stats, player insights, and stadium atmosphere — all in one cinematic web app." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-inner">
+      <div class="preloader-logo">
+        <span class="preloader-fan">FAN</span><span class="preloader-pit">PIT</span>
+      </div>
+      <div class="preloader-bar-track">
+        <div class="preloader-bar-fill" id="preloaderBar"></div>
+      </div>
+      <p class="preloader-text">Entering the stadium…</p>
+    </div>
+  </div>
+
+  <!-- Three.js Canvas (fixed background) -->
+  <canvas id="heroCanvas"></canvas>
+
+  <!-- ═══ HERO SECTION ═══ -->
+    <section id="heroSection">
+      <!-- Navigation -->
+      <nav id="navbar">
+        <div class="nav-left">
+          <a href="#" class="logo" id="logo">
+            <span class="logo-fan">FAN</span><span class="logo-pit">PIT</span>
+          </a>
+        </div>
+        <div class="nav-center">
+          <a href="#heroSection" class="nav-link active" id="navLive">LIVE</a>
+          <a href="#statsSection" class="nav-link" id="navStats">STATS</a>
+          <a href="#cardsSection" class="nav-link" id="navSquad">SQUAD</a>
+          <a href="#football101Section" class="nav-link" id="navArena">ARENA</a>
+        </div>
+        <div class="nav-right">
+          <button class="btn-glow" id="btnConnect">
+            <span class="btn-glow-text">CONNECT</span>
+            <span class="btn-glow-pulse"></span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Hero Content -->
+      <main id="heroContent">
+        <div class="hero-badge" id="heroBadge">
+          <span class="badge-dot"></span>
+          <span>MATCHDAY LIVE</span>
+        </div>
+        <h1 class="hero-title" id="heroTitle">
+          <span class="title-line title-line-1">FEEL THE</span>
+          <span class="title-line title-line-2">ROAR<span class="title-accent">.</span></span>
+        </h1>
+        <p class="hero-subtitle" id="heroSubtitle">
+          Immersive football experience.<br />
+          Real-time stats. Stadium atmosphere. Pure passion.
+        </p>
+        <div class="hero-actions" id="heroActions">
+          <button class="btn-primary" id="btnExplore">
+            <span>ENTER THE PITCH</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-secondary" id="btnWatch">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>WATCH HIGHLIGHTS</span>
+          </button>
+        </div>
+      </main>
+
+      <!-- Bottom Stats Ticker -->
+      <div id="bottomBar">
+        <div class="ticker" id="ticker">
+          <div class="ticker-item">
+            <span class="ticker-label">MATCH</span>
+            <span class="ticker-value" id="tickerMatch">MAN CITY vs ARSENAL</span>
+          </div>
+          <div class="ticker-divider"></div>
+          <div class="ticker-item">
+            <span class="ticker-label">SCORE</span>
+            <span class="ticker-value ticker-score" id="tickerScore">2 — 1</span>
+          </div>
+          <div class="ticker-divider"></div>
+          <div class="ticker-item">
+            <span class="ticker-label">TIME</span>
+            <span class="ticker-value ticker-time" id="matchTime">78:24</span>
+          </div>
+          <div class="ticker-divider"></div>
+          <div class="ticker-item">
+            <span class="ticker-label">POSSESSION</span>
+            <span class="ticker-value" id="matchPossession">54% — 46%</span>
+          </div>
+          <div class="ticker-divider"></div>
+          <div class="ticker-item">
+            <span class="ticker-label">SHOTS</span>
+            <span class="ticker-value" id="matchShots">14 — 9</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-line"></div>
+        <span>SCROLL</span>
+      </div>
+    </section>
+
+    <!-- ═══ PLAYER CARDS SECTION ═══ -->
+    <section id="cardsSection">
+      <div class="cards-header">
+        <span class="section-tag">SQUAD COLLECTION</span>
+        <h2 class="section-title">PLAYER<br/><span class="title-gradient">CARDS</span></h2>
+        <p class="section-desc">Hover to feel the holographic effect. Click to flip and reveal hidden stats.</p>
+      </div>
+
+      <div class="cards-grid" id="cardsGrid">
+
+        <!-- Card 1 — Striker -->
+        <div class="holo-card-wrapper" id="card1">
+          <div class="holo-card">
+            <!-- FRONT -->
+            <div class="holo-card-face holo-card-front">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="card-rating">94</div>
+              <div class="card-position">ST</div>
+              <img src="assets/player-striker.png" alt="Striker" class="card-photo" />
+              <div class="card-info">
+                <h3 class="card-name">HAALAND</h3>
+                <span class="card-club">MAN CITY</span>
+              </div>
+              <div class="card-neon-border"></div>
+            </div>
+            <!-- BACK -->
+            <div class="holo-card-face holo-card-back">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="back-header">
+                <span class="back-rating">94</span>
+                <span class="back-name">HAALAND</span>
+              </div>
+              <div class="back-stats">
+                <div class="stat-row"><span class="stat-label">PAC</span><div class="stat-bar"><div class="stat-fill" style="width:89%"></div></div><span class="stat-val">89</span></div>
+                <div class="stat-row"><span class="stat-label">SHO</span><div class="stat-bar"><div class="stat-fill" style="width:95%"></div></div><span class="stat-val">95</span></div>
+                <div class="stat-row"><span class="stat-label">PAS</span><div class="stat-bar"><div class="stat-fill" style="width:74%"></div></div><span class="stat-val">74</span></div>
+                <div class="stat-row"><span class="stat-label">DRI</span><div class="stat-bar"><div class="stat-fill" style="width:82%"></div></div><span class="stat-val">82</span></div>
+                <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar"><div class="stat-fill" style="width:45%"></div></div><span class="stat-val">45</span></div>
+                <div class="stat-row"><span class="stat-label">PHY</span><div class="stat-bar"><div class="stat-fill" style="width:93%"></div></div><span class="stat-val">93</span></div>
+              </div>
+              <div class="back-meta">
+                <div class="meta-item"><span class="meta-label">GOALS</span><span class="meta-val">28</span></div>
+                <div class="meta-item"><span class="meta-label">ASSISTS</span><span class="meta-val">5</span></div>
+                <div class="meta-item"><span class="meta-label">MATCHES</span><span class="meta-val">34</span></div>
+              </div>
+              <button class="card-ask-ai-btn" data-player="Haaland">
+                ⚽ Ask AI about Haaland
+              </button>
+              <div class="card-neon-border"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 — Winger -->
+        <div class="holo-card-wrapper" id="card2">
+          <div class="holo-card">
+            <div class="holo-card-face holo-card-front">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="card-rating">89</div>
+              <div class="card-position">RW</div>
+              <img src="assets/player-winger.png" alt="Winger" class="card-photo" />
+              <div class="card-info">
+                <h3 class="card-name">SAKA</h3>
+                <span class="card-club">ARSENAL</span>
+              </div>
+              <div class="card-neon-border"></div>
+            </div>
+            <div class="holo-card-face holo-card-back">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="back-header">
+                <span class="back-rating">89</span>
+                <span class="back-name">SAKA</span>
+              </div>
+              <div class="back-stats">
+                <div class="stat-row"><span class="stat-label">PAC</span><div class="stat-bar"><div class="stat-fill" style="width:92%"></div></div><span class="stat-val">92</span></div>
+                <div class="stat-row"><span class="stat-label">SHO</span><div class="stat-bar"><div class="stat-fill" style="width:83%"></div></div><span class="stat-val">83</span></div>
+                <div class="stat-row"><span class="stat-label">PAS</span><div class="stat-bar"><div class="stat-fill" style="width:86%"></div></div><span class="stat-val">86</span></div>
+                <div class="stat-row"><span class="stat-label">DRI</span><div class="stat-bar"><div class="stat-fill" style="width:91%"></div></div><span class="stat-val">91</span></div>
+                <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar"><div class="stat-fill" style="width:62%"></div></div><span class="stat-val">62</span></div>
+                <div class="stat-row"><span class="stat-label">PHY</span><div class="stat-bar"><div class="stat-fill" style="width:72%"></div></div><span class="stat-val">72</span></div>
+              </div>
+              <div class="back-meta">
+                <div class="meta-item"><span class="meta-label">GOALS</span><span class="meta-val">16</span></div>
+                <div class="meta-item"><span class="meta-label">ASSISTS</span><span class="meta-val">12</span></div>
+                <div class="meta-item"><span class="meta-label">MATCHES</span><span class="meta-val">36</span></div>
+              </div>
+              <button class="card-ask-ai-btn" data-player="Saka">
+                ⚽ Ask AI about Saka
+              </button>
+              <div class="card-neon-border"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 — Midfielder -->
+        <div class="holo-card-wrapper" id="card3">
+          <div class="holo-card">
+            <div class="holo-card-face holo-card-front">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="card-rating">92</div>
+              <div class="card-position">CDM</div>
+              <img src="assets/player-midfielder.png" alt="Midfielder" class="card-photo" />
+              <div class="card-info">
+                <h3 class="card-name">RODRI</h3>
+                <span class="card-club">MAN CITY</span>
+              </div>
+              <div class="card-neon-border"></div>
+            </div>
+            <div class="holo-card-face holo-card-back">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="back-header">
+                <span class="back-rating">92</span>
+                <span class="back-name">RODRI</span>
+              </div>
+              <div class="back-stats">
+                <div class="stat-row"><span class="stat-label">PAC</span><div class="stat-bar"><div class="stat-fill" style="width:68%"></div></div><span class="stat-val">68</span></div>
+                <div class="stat-row"><span class="stat-label">SHO</span><div class="stat-bar"><div class="stat-fill" style="width:76%"></div></div><span class="stat-val">76</span></div>
+                <div class="stat-row"><span class="stat-label">PAS</span><div class="stat-bar"><div class="stat-fill" style="width:90%"></div></div><span class="stat-val">90</span></div>
+                <div class="stat-row"><span class="stat-label">DRI</span><div class="stat-bar"><div class="stat-fill" style="width:84%"></div></div><span class="stat-val">84</span></div>
+                <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar"><div class="stat-fill" style="width:88%"></div></div><span class="stat-val">88</span></div>
+                <div class="stat-row"><span class="stat-label">PHY</span><div class="stat-bar"><div class="stat-fill" style="width:87%"></div></div><span class="stat-val">87</span></div>
+              </div>
+              <div class="back-meta">
+                <div class="meta-item"><span class="meta-label">GOALS</span><span class="meta-val">8</span></div>
+                <div class="meta-item"><span class="meta-label">ASSISTS</span><span class="meta-val">14</span></div>
+                <div class="meta-item"><span class="meta-label">MATCHES</span><span class="meta-val">38</span></div>
+              </div>
+              <button class="card-ask-ai-btn" data-player="Rodri">
+                ⚽ Ask AI about Rodri
+              </button>
+              <div class="card-neon-border"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 — Goalkeeper -->
+        <div class="holo-card-wrapper" id="card4">
+          <div class="holo-card">
+            <div class="holo-card-face holo-card-front">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="card-rating card-rating-blue">88</div>
+              <div class="card-position card-position-blue">GK</div>
+              <img src="assets/player-goalkeeper.png" alt="Goalkeeper" class="card-photo" />
+              <div class="card-info">
+                <h3 class="card-name">EDERSON</h3>
+                <span class="card-club">MAN CITY</span>
+              </div>
+              <div class="card-neon-border card-neon-border-blue"></div>
+            </div>
+            <div class="holo-card-face holo-card-back">
+              <div class="holo-foil"></div>
+              <div class="holo-shine"></div>
+              <div class="back-header">
+                <span class="back-rating back-rating-blue">88</span>
+                <span class="back-name">EDERSON</span>
+              </div>
+              <div class="back-stats">
+                <div class="stat-row"><span class="stat-label">DIV</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:90%"></div></div><span class="stat-val">90</span></div>
+                <div class="stat-row"><span class="stat-label">HAN</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:85%"></div></div><span class="stat-val">85</span></div>
+                <div class="stat-row"><span class="stat-label">KIC</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:93%"></div></div><span class="stat-val">93</span></div>
+                <div class="stat-row"><span class="stat-label">REF</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:88%"></div></div><span class="stat-val">88</span></div>
+                <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:60%"></div></div><span class="stat-val">60</span></div>
+                <div class="stat-row"><span class="stat-label">POS</span><div class="stat-bar"><div class="stat-fill stat-fill-blue" style="width:87%"></div></div><span class="stat-val">87</span></div>
+              </div>
+              <div class="back-meta">
+                <div class="meta-item"><span class="meta-label">CLEAN SHEETS</span><span class="meta-val">14</span></div>
+                <div class="meta-item"><span class="meta-label">SAVES</span><span class="meta-val">89</span></div>
+                <div class="meta-item"><span class="meta-label">MATCHES</span><span class="meta-val">35</span></div>
+              </div>
+              <button class="card-ask-ai-btn card-ask-ai-btn-blue" data-player="Ederson">
+                ⚽ Ask AI about Ederson
+              </button>
+              <div class="card-neon-border card-neon-border-blue"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="cards-hint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+        Hover to tilt &bull; Click to flip
+      </p>
+    </section>
+
+    <!-- ═══ STATS SECTION ═══ -->
+    <section id="statsSection" class="stats-section">
+      <div class="stats-header">
+        <span class="section-tag">ADVANCED ANALYTICS</span>
+        <h2 class="section-title">MATCH<br/><span class="title-gradient">STATS</span></h2>
+        <p class="section-desc">Powered by real-time API data</p>
+      </div>
+
+      <div class="stats-grid">
+        <!-- Component 1: Radar Chart -->
+        <div class="stats-card glass-card">
+          <h3 class="stats-card-title">Head to Head</h3>
+          <div class="stats-status" id="radarStatus"><span class="status-dot pulsing"></span> Loading...</div>
+          <div class="radar-container skeleton-pulse" id="radarContainer">
+            <canvas id="playerRadarChart"></canvas>
+          </div>
+          <div class="player-stats-labels" id="playerStatsLabels" style="display: none;">
+            <div class="player-label-city">
+              <h4>HAALAND</h4>
+              <p id="haalandStatsText"></p>
+            </div>
+            <div class="player-label-arsenal">
+              <h4>SAKA</h4>
+              <p id="sakaStatsText"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Component 2: Live Match Stats -->
+        <div class="stats-card glass-card">
+          <h3 class="stats-card-title">Live Match Stats</h3>
+          <div class="stats-status" id="matchStatus"><span class="status-dot pulsing"></span> Loading...</div>
+          <div class="match-bars-container skeleton-pulse" id="matchBarsContainer">
+            <!-- Bars injected via JS -->
+          </div>
+        </div>
+
+        <!-- Component 3: Pitch Heat Map -->
+        <div class="stats-card glass-card">
+          <h3 class="stats-card-title">Shot Map</h3>
+          <div class="stats-status" id="pitchStatus"><span class="status-dot pulsing"></span> Loading...</div>
+          <div class="pitch-container skeleton-pulse" id="pitchContainer">
+            <svg viewBox="0 0 100 64" class="pitch-svg" id="pitchSvg">
+              <!-- Pitch lines -->
+              <rect x="0" y="0" width="100" height="64" fill="#1a472a" />
+              <rect x="0" y="0" width="100" height="64" fill="none" stroke="white" stroke-width="0.5" />
+              <line x1="50" y1="0" x2="50" y2="64" stroke="white" stroke-width="0.5" />
+              <circle cx="50" cy="32" r="9.15" fill="none" stroke="white" stroke-width="0.5" />
+              <!-- Penalty Areas -->
+              <rect x="0" y="13.84" width="16.5" height="36.32" fill="none" stroke="white" stroke-width="0.5" />
+              <rect x="83.5" y="13.84" width="16.5" height="36.32" fill="none" stroke="white" stroke-width="0.5" />
+              <!-- Goal Areas -->
+              <rect x="0" y="24.84" width="5.5" height="14.32" fill="none" stroke="white" stroke-width="0.5" />
+              <rect x="94.5" y="24.84" width="5.5" height="14.32" fill="none" stroke="white" stroke-width="0.5" />
+            </svg>
+          </div>
+          <div class="pitch-legend" id="pitchLegend" style="display: none;">
+            <span class="legend-item"><span class="legend-dot goal"></span> Goal</span>
+            <span class="legend-item"><span class="legend-dot shot"></span> Shot</span>
+            <span class="legend-hint">Size = xG</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SQUAD SECTION ═══ -->
+    <section id="squadSection">
+      <div class="squad-header">
+        <h2 class="section-title">MATCHDAY <span class="title-gradient">SQUADS</span></h2>
+        <div id="squadStatusBadge" class="squad-status-badge">● Loading Data...</div>
+      </div>
+
+      <div class="squad-container">
+        <!-- City Row -->
+        <div class="team-row">
+          <h3 class="team-label city-label">MANCHESTER CITY</h3>
+          <div id="citySquadGrid" class="squad-grid"></div>
+        </div>
+
+        <!-- Arsenal Row -->
+        <div class="team-row">
+          <h3 class="team-label arsenal-label">ARSENAL</h3>
+          <div id="arsenalSquadGrid" class="squad-grid"></div>
+        </div>
+      </div>
+
+      <div class="who-to-watch-container">
+        <button id="btnWhoToWatch" class="btn-glow">
+          <span class="btn-glow-text">WHO SHOULD I WATCH?</span>
+          <span class="btn-glow-pulse"></span>
+        </button>
+      </div>
+
+      <!-- AI Scouting Panel -->
+      <div id="aiScoutingPanel" class="scouting-panel">
+        <button id="closeScoutingPanel" class="close-panel-btn">×</button>
+        <div class="scouting-content">
+          <span class="scouting-icon">⚡</span>
+          <div id="scoutingText" class="scouting-text">Analyzing player data...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FOOTBALL 101 SECTION ═══ -->
+    <section id="football101Section" class="fb-section">
+      <div class="fb-header">
+        <div class="hero-badge" style="animation: none;">BEGINNER FRIENDLY</div>
+        <h2 class="fb-title">FOOTBALL 101</h2>
+        <p class="fb-subtitle">Every term you were too afraid to ask about</p>
+      </div>
+
+      <div class="fb-search-container">
+        <div class="fb-search-wrapper">
+          <svg class="fb-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="fbSearchInput" placeholder="Search any football term..." />
+        </div>
+        <div class="fb-filters" id="fbFilters">
+          <button class="fb-chip active" data-filter="ALL">ALL</button>
+          <button class="fb-chip" data-filter="RULE">RULES</button>
+          <button class="fb-chip" data-filter="POSITION">POSITIONS</button>
+          <button class="fb-chip" data-filter="TACTIC">TACTICS</button>
+          <button class="fb-chip" data-filter="GAMEPLAY">GAMEPLAY</button>
+        </div>
+      </div>
+
+      <div class="fb-grid" id="fbGrid">
+        <!-- 12 Cards hardcoded -->
+        <div class="fb-card" data-category="RULE" data-term="Offside">
+          <div class="fb-card-badge">RULE</div>
+          <h3 class="fb-card-title">Offside</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="RULE" data-term="Yellow Card">
+          <div class="fb-card-badge">RULE</div>
+          <h3 class="fb-card-title">Yellow Card</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="RULE" data-term="Red Card">
+          <div class="fb-card-badge">RULE</div>
+          <h3 class="fb-card-title">Red Card</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="RULE" data-term="Penalty">
+          <div class="fb-card-badge">RULE</div>
+          <h3 class="fb-card-title">Penalty</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="RULE" data-term="Free Kick">
+          <div class="fb-card-badge">RULE</div>
+          <h3 class="fb-card-title">Free Kick</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="POSITION" data-term="Striker">
+          <div class="fb-card-badge">POSITION</div>
+          <h3 class="fb-card-title">Striker</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="POSITION" data-term="Goalkeeper">
+          <div class="fb-card-badge">POSITION</div>
+          <h3 class="fb-card-title">Goalkeeper</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="POSITION" data-term="Midfielder">
+          <div class="fb-card-badge">POSITION</div>
+          <h3 class="fb-card-title">Midfielder</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="POSITION" data-term="Defender">
+          <div class="fb-card-badge">POSITION</div>
+          <h3 class="fb-card-title">Defender</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="TACTIC" data-term="Pressing">
+          <div class="fb-card-badge">TACTIC</div>
+          <h3 class="fb-card-title">Pressing</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="TACTIC" data-term="Counter Attack">
+          <div class="fb-card-badge">TACTIC</div>
+          <h3 class="fb-card-title">Counter Attack</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+        <div class="fb-card" data-category="GAMEPLAY" data-term="Hat Trick">
+          <div class="fb-card-badge">GAMEPLAY</div>
+          <h3 class="fb-card-title">Hat Trick</h3>
+          <p class="fb-card-teaser">Click to understand this</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ HIGHLIGHTS ARENA SECTION ═══ -->
+    <section id="highlightsSection" class="highlights-section"></section>
+
+  </div><!-- /pageWrapper -->
+
+  <!-- ═══ FOOTBALL 101 MODAL ═══ -->
+  <div id="fbModal" class="fb-modal-overlay">
+    <div class="fb-modal">
+      <button class="fb-modal-close" id="fbModalClose">&times;</button>
+      <div class="fb-modal-header">
+        <div class="fb-card-badge fb-modal-badge" id="fbModalBadge">RULE</div>
+        <h2 class="fb-modal-title" id="fbModalTitle">Offside</h2>
+      </div>
+      <div class="fb-modal-content">
+        <div class="ai-typing-indicator" id="fbAiTyping">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="fb-ai-response" id="fbAiResponse"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TEAM PICKER OVERLAY ═══ -->
+  <div id="teamPicker" class="team-picker-overlay hidden">
+    <div class="team-picker-split team-city" id="pickCity">
+      <div class="team-content">
+        <h2 class="team-name">MAN CITY</h2>
+        <p class="team-chant">"I'm a City fan"</p>
+        <button class="team-pick-btn" id="btnChooseCity">CHOOSE MAN CITY</button>
+      </div>
+    </div>
+    <div class="team-picker-split team-arsenal" id="pickArsenal">
+      <div class="team-content">
+        <h2 class="team-name-arsenal">ARSENAL</h2>
+        <p class="team-chant">"Come on Arsenal!"</p>
+        <button class="team-pick-btn" id="btnChooseArsenal">CHOOSE ARSENAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FAN IDENTITY CARD SCREEN ═══ -->
+  <div id="fanIdentityScreen" class="fan-identity-screen">
+    <div class="identity-card" id="identityCard">
+      <div class="identity-label">FAN IDENTITY CONFIRMED</div>
+      <h3 class="identity-nickname" id="idNickname">The Faithful</h3>
+      <h2 class="identity-team" id="idTeam">MAN CITY</h2>
+      <p class="identity-hype" id="idHype">Sky Blue till I die.</p>
+      <button class="btn-primary mt-6" id="btnEnterStadium">
+        <span>ENTER THE STADIUM &rarr;</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ FANPIT AI CHAT PANEL ═══ -->
+  <div id="aiChatWrapper">
+    <!-- Collapsed Button -->
+    <button id="aiChatBtn" class="ai-chat-btn" aria-label="Open FanPit AI">
+      <span class="ai-btn-icon">⚽</span>
+      <div class="ai-btn-pulse"></div>
+    </button>
+
+    <!-- Expanded Panel -->
+    <div id="aiChatPanel" class="ai-chat-panel">
+      <!-- Header -->
+      <div class="ai-chat-header">
+        <div class="ai-header-left">
+          <div class="ai-status-dot"></div>
+          <div class="ai-header-text">
+            <h3>FANPIT AI</h3>
+            <span>Your football companion</span>
+          </div>
+        </div>
+        <button id="aiChatClose" class="ai-close-btn" aria-label="Minimize Chat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div id="aiChatMessages" class="ai-chat-messages">
+        <!-- Default Greeting -->
+        <div class="chat-message ai-message">
+          <div class="chat-avatar">⚽</div>
+          <div class="chat-bubble">Hey! I'm FanPit AI. Ask me about the players, rules, or what's happening in the match!</div>
+        </div>
+      </div>
+
+      <!-- Quick Chips -->
+      <div class="ai-quick-actions" id="aiQuickActions">
+        <button class="ai-chip">Who's playing? 🏟️</button>
+        <button class="ai-chip">Explain offside ❓</button>
+        <button class="ai-chip">Yellow card? 🟨</button>
+        <button class="ai-chip">What's the D line? ⚽</button>
+      </div>
+
+      <!-- Input Area -->
+      <form id="aiChatForm" class="ai-chat-input-area">
+        <input type="text" id="aiChatInput" placeholder="Ask anything..." autocomplete="off" />
+        <button type="submit" id="aiChatSend" class="ai-send-btn" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js"
+    }
+  }
+  </script>
+  <script type="module" src="main.js"></script>
+  <script src="cards.js" defer></script>
+  <script src="chat.js" defer></script>
+  <script src="football101.js" defer></script>
+  <script src="team-flow.js" defer></script>
+  <script src="stats.js" defer></script>
+  <script src="squad.js" defer></script>
+  <script src="highlights.js" defer></script>
+</body>
+</html>
