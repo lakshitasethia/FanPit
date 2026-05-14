@@ -143,28 +143,81 @@
   }
 
 
-  async function updateTicker() {
-  try {
-    const res = await fetch(
-      "https://sports.bzzoiro.com/api/events/?status=live&page=1",
-      { headers: { "Authorization": API_TOKEN } }
-    );
-    const data = await res.json();
-    const match = data.results[0];
-    if (!match) return;
+  // ── Live Ticker ──
+  const CITY_ID = 12;
+  const ARSENAL_ID = 14;
 
-    document.getElementById('tickerMatch').textContent = 
-      `${match.home_team} vs ${match.away_team}`;
-    document.getElementById('tickerScore').textContent = 
-      `${match.home_score ?? '-'} — ${match.away_score ?? '-'}`;
-    document.getElementById('matchTime').textContent = 
-      match.current_minute ? `${match.current_minute}'` : 'LIVE';
-  } catch(e) {
-    console.log('ticker update failed, keeping hardcoded');
+  async function fetchLiveScore() {
+    try {
+      const res = await fetch(BASE_URL + '/api/live/', {
+        headers: { 'Authorization': API_TOKEN }
+      });
+      if (!res.ok) throw new Error('Live API ' + res.status);
+      const data = await res.json();
+
+      const matches = Array.isArray(data) ? data : (data.results || []);
+
+      // Find the City vs Arsenal match in either home/away orientation
+      const match = matches.find(m => {
+        const hId = m.home_team_id ?? m.home_team?.id;
+        const aId = m.away_team_id ?? m.away_team?.id;
+        const hName = (m.home_team_name || m.home_team?.name || '').toLowerCase();
+        const aName = (m.away_team_name || m.away_team?.name || '').toLowerCase();
+        return (hId === CITY_ID && aId === ARSENAL_ID) ||
+               (hId === ARSENAL_ID && aId === CITY_ID) ||
+               (hName.includes('city') && aName.includes('arsenal')) ||
+               (hName.includes('arsenal') && aName.includes('city'));
+      });
+
+      if (!match) {
+        console.log('Live: City vs Arsenal not found, keeping hardcoded');
+        return;
+      }
+
+      // Score
+      const homeScore = match.home_score ?? match.home_goals ?? '-';
+      const awayScore = match.away_score ?? match.away_goals ?? '-';
+      const scoreEl = document.getElementById('tickerScore');
+      if (scoreEl) scoreEl.textContent = `${homeScore} — ${awayScore}`;
+
+      // Match name
+      const homeName = match.home_team_name || match.home_team?.name || 'HOME';
+      const awayName = match.away_team_name || match.away_team?.name || 'AWAY';
+      const matchEl = document.getElementById('tickerMatch');
+      if (matchEl) matchEl.textContent = `${homeName.toUpperCase()} vs ${awayName.toUpperCase()}`;
+
+      // Time
+      const minute = match.current_minute ?? match.minute ?? match.time;
+      const timeEl = document.getElementById('matchTime');
+      if (timeEl) timeEl.textContent = minute ? `${minute}'` : 'LIVE';
+
+      // Possession
+      const ls = match.live_stats || match.statistics || {};
+      const homePoss = ls.home?.ball_possession ?? ls.home?.possession;
+      const awayPoss = ls.away?.ball_possession ?? ls.away?.possession;
+      const possEl = document.getElementById('matchPossession');
+      if (possEl && homePoss != null && awayPoss != null) {
+        possEl.textContent = `${homePoss}% — ${awayPoss}%`;
+      }
+
+      // Shots
+      const homeShots = ls.home?.total_shots ?? ls.home?.shots;
+      const awayShots = ls.away?.total_shots ?? ls.away?.shots;
+      const shotsEl = document.getElementById('matchShots');
+      if (shotsEl && homeShots != null && awayShots != null) {
+        shotsEl.textContent = `${homeShots} — ${awayShots}`;
+      }
+
+      console.log('Live ticker updated ✓');
+    } catch (e) {
+      console.log('Live ticker fetch failed, keeping hardcoded:', e.message);
+    }
   }
-}
 
-updateTicker();
+  // Initial fetch + poll every 60s
+  fetchLiveScore();
+  setInterval(fetchLiveScore, 60000);
+
   function renderRadar(haaland, saka, fallback) {
     radarContainer.classList.remove('skeleton-pulse');
     radarContainer.classList.add('loaded');

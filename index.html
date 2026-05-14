@@ -105,6 +105,27 @@
             <span class="ticker-value" id="matchShots">14 — 9</span>
           </div>
         </div>
+        <!-- Prediction Card -->
+        <div class="pred-card" id="predInputArea">
+          <span class="pred-card-label">⚡ PREDICT THE SCORE</span>
+          <div class="pred-input-row">
+            <span class="pred-team-tag">CITY</span>
+            <input type="number" id="predCityGoals" class="pred-input" min="0" max="20" value="2" aria-label="City goals" />
+            <span class="pred-dash">—</span>
+            <input type="number" id="predArsenalGoals" class="pred-input" min="0" max="20" value="1" aria-label="Arsenal goals" />
+            <span class="pred-team-tag">ARS</span>
+            <button class="pred-call-btn" id="predCallBtn">CALL IT</button>
+          </div>
+        </div>
+        <!-- Prediction Result Panel -->
+        <div class="pred-result-panel" id="predResultPanel">
+          <div class="pred-result-inner">
+            <p class="pred-user-call" id="predUserCall"></p>
+            <div class="pred-ai-text" id="predAiText"></div>
+            <p class="pred-tracker" id="predTracker"></p>
+            <button class="pred-change-btn pred-hidden" id="predChangeBtn">↻ CHANGE PREDICTION</button>
+          </div>
+        </div>
       </div>
 
       <!-- Scroll Indicator -->
@@ -617,5 +638,6 @@
   <script src="stats.js" defer></script>
   <script src="squad.js" defer></script>
   <script src="highlights.js" defer></script>
+  <script src="prediction.js" defer></script>
 </body>
 </html>
